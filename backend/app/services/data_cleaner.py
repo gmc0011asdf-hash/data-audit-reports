@@ -1,39 +1,27 @@
 import re
 
-def clean_text(value: str | None) -> str:
-    """تنظيف النص الأساسي وإزالة الفراغات الزائدة."""
-    if value is None:
+def clean_text(text):
+    if not isinstance(text, str):
         return ""
-    value = str(value).strip()
-    value = re.sub(r'\s+', ' ', value)
-    return value
+    text = text.strip()
+    return text
 
-def normalize_arabic_text(value: str) -> str:
-    """توحيد الحروف العربية لأغراض المطابقة فقط وليس للعرض."""
+def normalize_arabic_text(text):
+    if not text:
+        return ""
+    text = text.replace("أ", "ا").replace("إ", "ا").replace("آ", "ا")
+    text = text.replace("ة", "ه")
+    text = re.sub(r'\s+', ' ', text)
+    return text
+
+def normalize_empty_value(value):
     if not value:
-        return ""
-    # استبدال أشكال الألف
-    value = re.sub(r'[أإآ]', 'ا', value)
-    # استبدال الياء والألف المقصورة
-    value = re.sub(r'ى', 'ي', value)
-    # استبدال التاء المربوطة والهاء (فقط للمطابقة الدقيقة)
-    value = re.sub(r'ة', 'ه', value)
-    return value
+        return True
+    empty_strings = ["", "/", "0", "-", "nan", "none", "null", "فارغ"]
+    if str(value).lower().strip() in empty_strings:
+        return True
+    return False
 
-def normalize_empty_value(value: str, empty_values: list = None) -> str:
-    """إرجاع نص فارغ إذا كانت القيمة ضمن قائمة القيم الفارغة."""
-    if empty_values is None:
-        empty_values = ["", "/", "0", "-", "nan", "none", "null", "فارغ"]
-    
-    cleaned = clean_text(value).lower()
-    if cleaned in [ev.lower() for ev in empty_values]:
-        return ""
-    return value
-
-def build_duplicate_key(head_name: str | None, wife_name: str | None = None, mother_name: str | None = None) -> str:
-    """توليد مفتاح للبحث عن السجلات المكررة."""
-    parts = []
-    if head_name: parts.append(clean_text(head_name))
-    if wife_name: parts.append(clean_text(wife_name))
-    if mother_name: parts.append(clean_text(mother_name))
-    return "_".join(parts)
+def build_duplicate_key(record):
+    # لا تنفذ كشف تكرار الآن
+    return None

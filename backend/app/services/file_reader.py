@@ -6,7 +6,7 @@ def detect_mojibake(value: str) -> bool:
     if not isinstance(value, str):
         return False
     # Characters typical of UTF-8 read as Latin-1
-    mojibake_chars = ['Ø', 'Ù', 'æ', 'ß', '', 'Ç', 'È', 'É', 'Ê', 'Ë']
+    mojibake_chars = ['Ø', 'Ù', 'æ', 'ß', 'Ç', 'È', 'É', 'Ê', 'Ë']
     count = 0
     for char in mojibake_chars:
         if char in value:

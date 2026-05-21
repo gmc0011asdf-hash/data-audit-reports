@@ -58,6 +58,21 @@ class MappingApplyResponse(BaseModel):
     records_preview: List[CanonicalRecord]
     warnings: List[PreviewWarning] = []
 
+class ClassificationSummary(BaseModel):
+    area: int = 0
+    empty: int = 0
+    non_area: int = 0
+    needs_review: int = 0
+
+class ClassificationApplyRequest(BaseModel):
+    records: List[CanonicalRecord]
+
+class ClassificationApplyResponse(BaseModel):
+    classified_count: int
+    records: List[CanonicalRecord]
+    summary: ClassificationSummary
+    warnings: List[PreviewWarning] = []
+
 class AreaStatisticsRow(BaseModel):
     area_name: str
     count: int
