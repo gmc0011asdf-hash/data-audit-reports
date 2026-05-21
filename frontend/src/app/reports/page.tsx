@@ -91,7 +91,7 @@ export default function ReportsPage() {
     <div className="space-y-6 max-w-4xl mx-auto">
 
       {/* Page Header */}
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center flex-wrap gap-3">
+      <div className="print:hidden bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center flex-wrap gap-3">
         <div>
           <h2 className="text-2xl font-bold text-gray-800 mb-1">التقارير الإدارية</h2>
           <p className="text-gray-400 text-sm">تقرير مبني على آخر بيانات مصنفة</p>
@@ -103,6 +103,18 @@ export default function ReportsPage() {
           >
             تحديث التقرير
           </button>
+          <button
+            onClick={() => window.print()}
+            className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold"
+          >
+            طباعة التقرير
+          </button>
+          <Link
+            href="/export"
+            className="px-4 py-2 text-sm bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition font-semibold"
+          >
+            التصدير
+          </Link>
           <Link
             href="/charts"
             className="px-4 py-2 text-sm bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition font-semibold"
@@ -242,7 +254,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Bottom Nav */}
-      <div className="flex justify-center gap-4 pb-6">
+      <div className="print:hidden flex justify-center gap-4 pb-6">
         <Link
           href="/mapping"
           className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition shadow-md text-sm"
