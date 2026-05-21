@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Project Data
+gg.txt
+*.htm
+*.html
+backend/app/storage/uploads/*
+backend/app/storage/processed/*
+backend/app/storage/exports/*
+exports/*
+
+# Keep Empty Directories
+!backend/app/storage/uploads/.gitkeep
+!backend/app/storage/processed/.gitkeep
+!backend/app/storage/exports/.gitkeep
+!exports/.gitkeep
+
+# Next.js
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/node_modules/
+frontend/.pnp
+frontend/.pnp.js
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# System Files
+.DS_Store
+Thumbs.db
