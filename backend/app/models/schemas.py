@@ -48,6 +48,16 @@ class ColumnMapping(BaseModel):
     house_number: Optional[str] = None
     raw_address: Optional[str] = None
 
+class MappingApplyRequest(BaseModel):
+    file_id: str
+    mapping: ColumnMapping
+
+class MappingApplyResponse(BaseModel):
+    file_id: str
+    mapped_count: int
+    records_preview: List[CanonicalRecord]
+    warnings: List[PreviewWarning] = []
+
 class AreaStatisticsRow(BaseModel):
     area_name: str
     count: int
