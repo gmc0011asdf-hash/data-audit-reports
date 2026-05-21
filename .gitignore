@@ -70,3 +70,8 @@ backend/.venv/
 .venv/
 backend/.venv/
 **/.venv/
+
+# Python virtual environments
+.venv/
+backend/.venv/
+**/.venv/
