@@ -1,6 +1,6 @@
 import math
 from fastapi import APIRouter, HTTPException, Query
-from ..db import get_connection, db_available
+from ..db import get_connection, db_available, build_where_clause
 
 router = APIRouter(prefix="/api", tags=["Records"])
 
@@ -32,16 +32,19 @@ def list_datasets():
 
 @router.get("/records")
 def get_records(
-    dataset_id: int   = Query(default=None, description="تصفية حسب مجموعة البيانات"),
-    page:       int   = Query(default=1,   ge=1),
-    page_size:  int   = Query(default=100, ge=1, le=500),
-    search:     str   = Query(default=""),
-    form_number: str  = Query(default=""),
-    head_name:  str   = Query(default=""),
+    dataset_id:     int = Query(default=None, description="تصفية حسب مجموعة البيانات"),
+    page:           int = Query(default=1,   ge=1),
+    page_size:      int = Query(default=100, ge=1, le=500),
+    search:         str = Query(default=""),
+    form_number:    str = Query(default=""),
+    head_name:      str = Query(default=""),
+    area:           str = Query(default=""),
+    classification: str = Query(default=""),
+    status:         str = Query(default=""),
 ):
     """
     Paginated, searchable records from SQL Server.
-    Returns: records, total_records, page, page_size, total_pages
+    Supports: dataset_id, search, form_number, head_name, area, classification, status.
     """
     if not db_available():
         raise HTTPException(
@@ -49,50 +52,27 @@ def get_records(
             detail="قاعدة البيانات غير متاحة. تأكد من تشغيل SQL Server وتنفيذ سكربت الاستيراد أولاً."
         )
 
+    where, params = build_where_clause(
+        dataset_id=dataset_id, search=search, form_number=form_number,
+        head_name=head_name, area=area, classification=classification, status=status
+    )
+
     conn = get_connection()
     try:
         cursor = conn.cursor()
 
-        # ── Build WHERE clause ───────────────────────────────
-        conditions = []
-        params: list = []
-
-        if dataset_id is not None:
-            conditions.append("dataset_id = ?")
-            params.append(dataset_id)
-
-        if search.strip():
-            term = f"%{search.strip()}%"
-            conditions.append(
-                "(form_number LIKE ? OR head_name LIKE ? OR wife_name LIKE ? "
-                "OR mother_name LIKE ? OR raw_address LIKE ? OR district LIKE ?)"
-            )
-            params.extend([term] * 6)
-
-        if form_number.strip():
-            conditions.append("form_number LIKE ?")
-            params.append(f"%{form_number.strip()}%")
-
-        if head_name.strip():
-            conditions.append("head_name LIKE ?")
-            params.append(f"%{head_name.strip()}%")
-
-        where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
-
-        # ── Count ────────────────────────────────────────────
+        # ── Count ────────────────────────────────────────────────
         cursor.execute(f"SELECT COUNT(*) FROM records {where}", params)
         total_records = cursor.fetchone()[0]
         total_pages = max(1, math.ceil(total_records / page_size))
         page = min(page, total_pages)
 
-        # ── Fetch page ───────────────────────────────────────
+        # ── Fetch page ───────────────────────────────────────────
         offset = (page - 1) * page_size
-
-        # SQL Server 2012+ uses OFFSET … FETCH NEXT
         query = (
             f"SELECT id, dataset_id, form_number, head_name, wife_name, mother_name, "
             f"district, alley, house_number, raw_address, normalized_area, "
-            f"address_classification, record_status "
+            f"address_classification, record_status, classification_reason "
             f"FROM records {where} "
             f"ORDER BY id "
             f"OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
@@ -102,7 +82,6 @@ def get_records(
         cols = [d[0] for d in cursor.description]
         rows = [dict(zip(cols, row)) for row in cursor.fetchall()]
 
-        # Replace None with empty string for JSON cleanliness
         for r in rows:
             for k, v in r.items():
                 if v is None:

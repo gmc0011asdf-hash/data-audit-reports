@@ -30,6 +30,7 @@ from app.services.file_reader import (
     read_any_file, detect_encoding, detect_separator, detect_header_row,
     fix_mojibake_text, detect_mojibake
 )
+from app.services.area_classifier import classify_address
 
 # ── Column mapping: canonical Arabic → database column name ──────────────────
 COL_TO_DB = {
@@ -180,6 +181,9 @@ def main():
         return str(v).strip()
 
     for row_dict in rows:
+        raw_addr = _val(row_dict, 'العنوان') or ''
+        norm_area, cls, admin_note, rec_status, reason = classify_address(raw_addr)
+
         batch.append((
             dataset_id,
             _val(row_dict, 'الاستمارة'),   # form_number
@@ -189,15 +193,19 @@ def main():
             _val(row_dict, 'المحلة'),      # district
             _val(row_dict, 'الزقاق'),      # alley
             _val(row_dict, 'رقم الدار'),   # house_number
-            _val(row_dict, 'العنوان'),     # raw_address
+            raw_addr or None,              # raw_address
+            norm_area if norm_area else None,
+            cls, rec_status,
+            reason if reason else None,
         ))
 
         if len(batch) >= BATCH_SIZE:
             cursor.executemany(
                 "INSERT INTO records "
                 "(dataset_id, form_number, head_name, wife_name, mother_name, "
-                " district, alley, house_number, raw_address) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                " district, alley, house_number, raw_address, "
+                " normalized_area, address_classification, record_status, classification_reason) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 batch
             )
             inserted += len(batch)
@@ -208,8 +216,9 @@ def main():
         cursor.executemany(
             "INSERT INTO records "
             "(dataset_id, form_number, head_name, wife_name, mother_name, "
-            " district, alley, house_number, raw_address) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            " district, alley, house_number, raw_address, "
+            " normalized_area, address_classification, record_status, classification_reason) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             batch
         )
         inserted += len(batch)

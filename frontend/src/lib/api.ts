@@ -74,28 +74,49 @@ export async function getDatasets() {
 }
 
 export interface RecordsParams {
-  dataset_id?: number;
-  page?: number;
-  page_size?: number;
-  search?: string;
-  form_number?: string;
-  head_name?: string;
+  dataset_id?:     number;
+  page?:           number;
+  page_size?:      number;
+  search?:         string;
+  form_number?:    string;
+  head_name?:      string;
+  area?:           string;
+  classification?: string;
+  status?:         string;
+}
+
+function buildRecordsQuery(params: RecordsParams): string {
+  const q = new URLSearchParams();
+  if (params.dataset_id     !== undefined) q.set("dataset_id",     String(params.dataset_id));
+  if (params.page           !== undefined) q.set("page",           String(params.page));
+  if (params.page_size      !== undefined) q.set("page_size",      String(params.page_size));
+  if (params.search)                       q.set("search",         params.search);
+  if (params.form_number)                  q.set("form_number",    params.form_number);
+  if (params.head_name)                    q.set("head_name",      params.head_name);
+  if (params.area)                         q.set("area",           params.area);
+  if (params.classification)               q.set("classification", params.classification);
+  if (params.status)                       q.set("status",         params.status);
+  return q.toString();
 }
 
 export async function searchRecords(params: RecordsParams = {}) {
-  const q = new URLSearchParams();
-  if (params.dataset_id !== undefined) q.set("dataset_id", String(params.dataset_id));
-  if (params.page       !== undefined) q.set("page",       String(params.page));
-  if (params.page_size  !== undefined) q.set("page_size",  String(params.page_size));
-  if (params.search)                   q.set("search",     params.search);
-  if (params.form_number)              q.set("form_number", params.form_number);
-  if (params.head_name)                q.set("head_name",  params.head_name);
-
-  const url = `${API_BASE_URL}/api/records${q.toString() ? "?" + q.toString() : ""}`;
+  const q = buildRecordsQuery(params);
+  const url = `${API_BASE_URL}/api/records${q ? "?" + q : ""}`;
   const response = await fetch(url);
   if (!response.ok) {
     const err = await response.json().catch(() => null);
     throw new Error(err?.detail || "حدث خطأ أثناء البحث في السجلات");
+  }
+  return response.json();
+}
+
+export async function getAnalyticsSummary(params: RecordsParams = {}) {
+  const q = buildRecordsQuery(params);
+  const url = `${API_BASE_URL}/api/analytics/summary${q ? "?" + q : ""}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    const err = await response.json().catch(() => null);
+    throw new Error(err?.detail || "حدث خطأ أثناء جلب الإحصائيات");
   }
   return response.json();
 }
