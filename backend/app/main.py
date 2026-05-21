@@ -1,19 +1,25 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from .api import upload, preview
 
 app = FastAPI(
-    title="نظام تدقيق وتحليل الملفات وإعداد التقارير",
-    description="واجهة برمجة التطبيقات للنظام",
+    title="نظام تدقيق وتحليل الملفات",
+    description="واجهة برمجة التطبيقات لرفع وتحليل البيانات",
     version="1.0.0"
 )
 
+# السماح للواجهة المحلية بالاتصال (CORS)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# إضافة موجهات API (Routers)
+app.include_router(upload.router)
+app.include_router(preview.router)
 
 @app.get("/health")
 def health_check():
@@ -25,5 +31,3 @@ def get_info():
         "system_name": "نظام تدقيق وتحليل الملفات وإعداد التقارير",
         "version": "1.0.0"
     }
-
-# سيتم إضافة باقي مسارات API لاحقاً

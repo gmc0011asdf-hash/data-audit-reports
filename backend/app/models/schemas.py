@@ -1,6 +1,26 @@
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 
+class UploadResponse(BaseModel):
+    file_id: str
+    original_filename: str
+    saved_filename: str
+    file_size: int
+    message: str
+
+class PreviewWarning(BaseModel):
+    type: str
+    message: str
+
+class PreviewResponse(BaseModel):
+    file_id: str
+    detected_encoding: str
+    detected_separator: str
+    columns: List[str]
+    row_count: int
+    preview_rows: List[Dict[str, Any]]
+    warnings: List[PreviewWarning] = []
+
 class CanonicalRecord(BaseModel):
     form_number: Optional[str] = None
     head_name: Optional[str] = None
@@ -12,9 +32,9 @@ class CanonicalRecord(BaseModel):
     raw_address: Optional[str] = None
     normalized_area: Optional[str] = None
     original_address_variant: Optional[str] = None
-    address_classification: str = "needs_review"  # area, non_area, empty, needs_review
+    address_classification: str = "needs_review"
     administrative_note: Optional[str] = None
-    record_status: str = "needs_review"  # complete, incomplete, needs_review
+    record_status: str = "needs_review"
     duplicate_key: Optional[str] = None
     classification_reason: Optional[str] = None
 
@@ -27,12 +47,6 @@ class ColumnMapping(BaseModel):
     alley: Optional[str] = None
     house_number: Optional[str] = None
     raw_address: Optional[str] = None
-
-class FilePreviewResponse(BaseModel):
-    file_name: str
-    total_rows: int
-    columns: List[str]
-    preview_data: List[Dict[str, Any]]
 
 class AreaStatisticsRow(BaseModel):
     area_name: str

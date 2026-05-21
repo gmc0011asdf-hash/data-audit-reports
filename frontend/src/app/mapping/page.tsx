@@ -14,8 +14,7 @@ export default function MappingPage() {
     <div className="space-y-6">
       <h2 className="text-3xl font-bold text-gray-800 mb-2">تحديد الأعمدة</h2>
       <p className="text-gray-500 mb-8">
-        قم بربط أعمدة الملف المرفوع مع الحقول المرجعية للنظام. 
-        لا يلزم أن تكون أسماء الأعمدة في ملفك مطابقة تماماً للحقول المرجعية.
+        بناءً على المعاينة السابقة، سيتم في هذه المرحلة لاحقاً ربط أعمدة الملف المرفوع بالحقول المرجعية للنظام الموضحة أدناه.
       </p>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -23,9 +22,9 @@ export default function MappingPage() {
           <table className="w-full text-right text-sm">
             <thead className="bg-gray-50 text-gray-600 font-medium border-b border-gray-100">
               <tr>
-                <th className="p-4 w-1/3">الحقل المرجعي</th>
+                <th className="p-4 w-1/3">الحقل المرجعي المطلوب</th>
                 <th className="p-4 w-1/3">الوصف</th>
-                <th className="p-4 w-1/3">العمود في الملف</th>
+                <th className="p-4 w-1/3">العمود في الملف (سيتم تفعيله لاحقاً)</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -35,11 +34,10 @@ export default function MappingPage() {
                   <td className="p-4 text-gray-500 text-xs">{field.description}</td>
                   <td className="p-4">
                     <select 
-                      className="w-full p-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                      className="w-full p-2 border border-gray-200 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed"
                       disabled
                     >
-                      <option value="">-- اختر العمود --</option>
-                      <option value="placeholder">مثال: عمود {field.label} في الملف</option>
+                      <option value="">-- يتم تطويرها في المرحلة القادمة --</option>
                     </select>
                   </td>
                 </tr>
@@ -50,10 +48,10 @@ export default function MappingPage() {
       </div>
       
       <div className="flex justify-end gap-3 mt-6">
-        <button className="px-6 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+        <button className="px-6 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition" disabled>
           إلغاء
         </button>
-        <button className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition" disabled>
+        <button className="px-6 py-2 bg-gray-400 text-white rounded-lg shadow-md cursor-not-allowed" disabled>
           حفظ ومتابعة
         </button>
       </div>
