@@ -119,6 +119,7 @@ function MappingContent() {
     try {
       const response = await getStatistics(classifiedData);
       setStatsData(response);
+      localStorage.setItem('last_statistics', JSON.stringify(response));
     } catch (err: any) {
       setError(err.message || "فشل جلب الإحصائيات");
     } finally {
@@ -352,6 +353,16 @@ function MappingContent() {
                   </div>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* زر الرسوم البيانية */}
+          {statsData && (
+            <div className="flex justify-center">
+              <button onClick={() => router.push('/charts')}
+                className="px-10 py-3 rounded-xl font-bold text-white shadow-md transition bg-purple-600 hover:bg-purple-700">
+                عرض الرسوم البيانية
+              </button>
             </div>
           )}
 
