@@ -90,3 +90,24 @@ class StatisticsSummary(BaseModel):
     empty_records_count: int
     issues_count: int
     top_areas: List[AreaStatisticsRow]
+
+class StatusSummary(BaseModel):
+    complete: int = 0
+    incomplete: int = 0
+    needs_review: int = 0
+
+class AreaDistributionRow(BaseModel):
+    area_name: str
+    count: int
+
+class StatisticsRequest(BaseModel):
+    records: List[CanonicalRecord]
+
+class StatisticsResponse(BaseModel):
+    total_records: int
+    classification_summary: ClassificationSummary
+    status_summary: StatusSummary
+    area_distribution: List[AreaDistributionRow]
+    top_areas: List[AreaDistributionRow]
+    review_records: List[CanonicalRecord]
+    warnings: List[PreviewWarning] = []
