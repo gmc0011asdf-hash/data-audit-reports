@@ -11,6 +11,7 @@ export default function UploadPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [fileId, setFileId] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -20,20 +21,25 @@ export default function UploadPage() {
     }
   };
 
-  const handleUpload = async () => {
-    if (!file) {
-      setError("الرجاء اختيار ملف أولاً");
-      return;
+  const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    setDragOver(false);
+    const dropped = e.dataTransfer.files?.[0];
+    if (dropped) {
+      setFile(dropped);
+      setError(null);
+      setSuccess(false);
     }
+  };
 
+  const handleUpload = async () => {
+    if (!file) { setError("الرجاء اختيار ملف أولاً"); return; }
     setLoading(true);
     setError(null);
-
     try {
       const response = await uploadFile(file);
       setFileId(response.file_id);
       setSuccess(true);
-      // Save file_id to localStorage for easy access
       localStorage.setItem("current_file_id", response.file_id);
     } catch (err: any) {
       setError(err.message || "فشل رفع الملف");
@@ -43,62 +49,128 @@ export default function UploadPage() {
   };
 
   const goToPreview = () => {
-    if (fileId) {
-      router.push(`/preview?fileId=${fileId}`);
-    }
+    if (fileId) router.push(`/preview?fileId=${fileId}`);
+  };
+
+  const formatSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 mt-10">
-      <h2 className="text-3xl font-bold text-gray-800 text-center">رفع ملف البيانات</h2>
-      <p className="text-gray-500 text-center mb-8">
-        قم برفع ملف البيانات (txt, csv, xlsx) لبدء المعالجة.
-      </p>
+    <div className="max-w-2xl mx-auto space-y-6">
 
-      <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
-        <label className="w-full flex flex-col items-center px-4 py-10 bg-blue-50 text-blue-500 rounded-lg shadow-inner tracking-wide border border-blue-200 cursor-pointer hover:bg-blue-100 transition">
-          <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11.2V14a1 1 0 0 1-2 0v-2.8l-1.6 1.6a1 1 0 1 1-1.4-1.4l3.3-3.3a1 1 0 0 1 1.4 0l3.3 3.3a1 1 0 0 1-1.4 1.4L11 11.2z" />
-          </svg>
-          <span className="mt-4 text-base font-semibold leading-normal">
-            {file ? file.name : "اختر ملفاً أو اسحبه هنا"}
-          </span>
-          <input type="file" className="hidden" accept=".txt,.csv,.xlsx" onChange={handleFileChange} />
+      {/* Header */}
+      <div>
+        <h2 className="text-2xl font-bold text-slate-800">رفع ملف البيانات</h2>
+        <p className="text-slate-500 text-sm mt-1">رفع ملف للبدء في عملية التدقيق والتحليل</p>
+      </div>
+
+      {/* Upload Card */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-5">
+
+        {/* Drop Zone */}
+        <label
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={handleDrop}
+          className={`flex flex-col items-center justify-center px-6 py-12 rounded-xl border-2 border-dashed cursor-pointer transition-all ${
+            dragOver
+              ? "border-indigo-400 bg-indigo-50"
+              : file
+              ? "border-emerald-300 bg-emerald-50"
+              : "border-slate-200 bg-slate-50 hover:border-indigo-300 hover:bg-indigo-50/50"
+          }`}
+        >
+          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 text-2xl ${
+            file ? "bg-emerald-100" : "bg-indigo-100"
+          }`}>
+            {file ? "✅" : "📂"}
+          </div>
+
+          {file ? (
+            <div className="text-center">
+              <p className="font-semibold text-slate-800">{file.name}</p>
+              <p className="text-sm text-slate-400 mt-1">{formatSize(file.size)}</p>
+              <p className="text-xs text-emerald-600 mt-1 font-semibold">الملف جاهز للرفع</p>
+            </div>
+          ) : (
+            <div className="text-center">
+              <p className="font-semibold text-slate-700">اسحب الملف هنا أو انقر للاختيار</p>
+              <p className="text-sm text-slate-400 mt-1">يدعم النظام ترميز UTF-8 وWindows-1256</p>
+            </div>
+          )}
+
+          <input type="file" className="hidden" accept=".txt,.csv,.xlsx,.xls" onChange={handleFileChange} />
         </label>
 
-        {error && (
-          <div className="w-full mt-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm border border-red-100">
-            {error}
-          </div>
-        )}
-
-        {success && (
-          <div className="w-full mt-4 p-3 bg-green-50 text-green-600 rounded-lg text-sm border border-green-100 text-center">
-            تم رفع الملف بنجاح!
-          </div>
-        )}
-
-        <div className="flex gap-4 mt-8 w-full">
-          {!success ? (
-            <button 
-              onClick={handleUpload}
-              disabled={loading || !file}
-              className={`w-full py-3 rounded-lg font-bold text-white transition ${
-                loading || !file ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-              }`}
-            >
-              {loading ? "جاري الرفع..." : "رفع الملف"}
-            </button>
-          ) : (
-            <button 
-              onClick={goToPreview}
-              className="w-full py-3 bg-green-600 hover:bg-green-700 rounded-lg font-bold text-white transition shadow-md"
-            >
-              الانتقال لمعاينة البيانات
-            </button>
-          )}
+        {/* Supported types */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-xs text-slate-400">الصيغ:</span>
+          {[".txt", ".csv", ".xlsx", ".xls"].map((ext) => (
+            <span key={ext} className="px-2 py-0.5 bg-slate-100 text-slate-500 rounded text-xs font-mono">
+              {ext}
+            </span>
+          ))}
         </div>
+
+        {/* Error */}
+        {error && (
+          <div className="p-3 bg-red-50 text-red-600 rounded-xl text-sm border border-red-100 flex items-center gap-2">
+            <span>⚠</span> {error}
+          </div>
+        )}
+
+        {/* Success */}
+        {success && (
+          <div className="p-3 bg-emerald-50 text-emerald-700 rounded-xl text-sm border border-emerald-100">
+            <p className="font-semibold">تم رفع الملف بنجاح</p>
+            <p className="text-xs mt-0.5 font-mono text-emerald-500">{fileId}</p>
+          </div>
+        )}
+
+        {/* Action Button */}
+        {!success ? (
+          <button
+            onClick={handleUpload}
+            disabled={loading || !file}
+            className={`w-full py-3 rounded-xl font-bold text-white transition ${
+              loading || !file
+                ? "bg-slate-300 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700 shadow-md"
+            }`}
+          >
+            {loading ? "جاري الرفع..." : "رفع الملف"}
+          </button>
+        ) : (
+          <button
+            onClick={goToPreview}
+            className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 rounded-xl font-bold text-white transition shadow-md"
+          >
+            الانتقال لمعاينة البيانات ←
+          </button>
+        )}
       </div>
+
+      {/* Guide Card */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+        <h3 className="font-semibold text-slate-700 text-sm mb-3">إرشادات الرفع</h3>
+        <ul className="space-y-2 text-xs text-slate-500">
+          {[
+            "يدعم النظام ملفات TXT و CSV المفصولة بـ Tab أو فاصلة.",
+            "يتم اكتشاف الترميز تلقائياً وإصلاح النص العربي المشوه.",
+            "الصف الأول في الملف يجب أن يكون رؤوس الأعمدة.",
+            "بعد الرفع انتقل للمعاينة لتحديد الأعمدة وربطها.",
+          ].map((tip, i) => (
+            <li key={i} className="flex items-start gap-2">
+              <span className="text-indigo-400 shrink-0 mt-0.5">●</span>
+              <span>{tip}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
     </div>
   );
 }

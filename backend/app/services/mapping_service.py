@@ -1,5 +1,5 @@
 import pandas as pd
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 from ..models.schemas import ColumnMapping, CanonicalRecord, PreviewWarning
 
 def validate_mapping_columns(df: pd.DataFrame, mapping: ColumnMapping) -> Tuple[bool, List[PreviewWarning]]:
@@ -31,12 +31,12 @@ def validate_mapping_columns(df: pd.DataFrame, mapping: ColumnMapping) -> Tuple[
 
     return is_valid, warnings
 
-def dataframe_to_canonical_records(df: pd.DataFrame, mapping: ColumnMapping, limit: int = 50) -> List[CanonicalRecord]:
-    """تأخذ DataFrame وتقوم بتحويل أول N صف إلى نموذج CanonicalRecord بناءً على الربط المحدد."""
+def dataframe_to_canonical_records(df: pd.DataFrame, mapping: ColumnMapping, limit: Optional[int] = None) -> List[CanonicalRecord]:
+    """تأخذ DataFrame وتحوّل الصفوف إلى نموذج CanonicalRecord. إذا limit=None تُعالج كل الصفوف."""
     records = []
-    
-    # نأخذ أول N صفاً فقط كمعاينة
-    preview_df = df.head(limit).fillna("")
+
+    process_df = df if limit is None else df.head(limit)
+    preview_df = process_df.fillna("")
     
     # تحويل الربط إلى قاموس، واستبعاد الحقول الفارغة
     mapping_dict = mapping.model_dump(exclude_none=True)

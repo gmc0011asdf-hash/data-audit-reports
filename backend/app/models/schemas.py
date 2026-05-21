@@ -17,9 +17,15 @@ class PreviewResponse(BaseModel):
     detected_encoding: str
     detected_separator: str
     columns: List[str]
-    row_count: int
+    row_count: int           # total rows in file (before search filter)
+    filtered_count: int = 0  # rows matching current search
+    page: int = 1
+    page_size: int = 100
+    total_pages: int = 1
     preview_rows: List[Dict[str, Any]]
     warnings: List[PreviewWarning] = []
+    header_row_index: Optional[int] = None
+    header_detection_method: Optional[str] = None
 
 class CanonicalRecord(BaseModel):
     form_number: Optional[str] = None
@@ -54,8 +60,8 @@ class MappingApplyRequest(BaseModel):
 
 class MappingApplyResponse(BaseModel):
     file_id: str
-    mapped_count: int
-    records_preview: List[CanonicalRecord]
+    mapped_count: int          # total rows processed
+    records_preview: List[CanonicalRecord]   # first 100 only
     warnings: List[PreviewWarning] = []
 
 class ClassificationSummary(BaseModel):

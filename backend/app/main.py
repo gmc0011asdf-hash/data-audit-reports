@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .api import upload, preview, mapping, classification, statistics
+from .api import upload, preview, mapping, classification, statistics, records
 
 app = FastAPI(
     title="نظام تدقيق وتحليل الملفات",
@@ -23,6 +23,7 @@ app.include_router(preview.router)
 app.include_router(mapping.router)
 app.include_router(classification.router)
 app.include_router(statistics.router)
+app.include_router(records.router)
 
 @app.get("/health")
 def health_check():

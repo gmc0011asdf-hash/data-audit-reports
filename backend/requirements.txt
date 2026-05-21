@@ -6,3 +6,4 @@ rapidfuzz==3.5.2
 charset-normalizer==3.3.2
 python-multipart==0.0.6
 chardet==5.2.0
+pyodbc>=5.0.0

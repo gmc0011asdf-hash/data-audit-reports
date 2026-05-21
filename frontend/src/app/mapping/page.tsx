@@ -161,10 +161,10 @@ function MappingContent() {
   return (
     <div className="space-y-8">
       {/* رأس الصفحة */}
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center">
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">تحديد الأعمدة وربطها</h2>
-          <p className="text-gray-500">
+          <h2 className="text-3xl font-bold text-slate-800 mb-2">تحديد الأعمدة وربطها</h2>
+          <p className="text-slate-500">
             اختر العمود المناسب لكل حقل حتى يتم توحيد البيانات.{" "}
             الملف: <span className="text-blue-500 font-mono text-xs bg-blue-50 px-2 py-1 rounded">{fileId}</span>
           </p>
@@ -180,14 +180,14 @@ function MappingContent() {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {canonicalFields.map((field) => (
-              <div key={field.id} className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
+              <div key={field.id} className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-xl">{field.icon}</span>
-                  <span className="font-semibold text-gray-700">{field.label}</span>
+                  <span className="font-semibold text-slate-700">{field.label}</span>
                 </div>
                 <select value={mapping[field.id] || ""}
                   onChange={(e) => handleSelectChange(field.id, e.target.value)}
-                  className="w-full p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-sm">
+                  className="w-full p-2.5 border border-slate-200 rounded-lg bg-gray-50 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-sm">
                   <option value="">-- غير موجود --</option>
                   {columns.map(col => <option key={col} value={col}>{col}</option>)}
                 </select>
@@ -196,7 +196,7 @@ function MappingContent() {
           </div>
           <div className="flex justify-center mt-6">
             <button onClick={handleApplyMapping} disabled={mappingLoading}
-              className={`px-10 py-3 rounded-xl font-bold text-white shadow-md transition ${mappingLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}>
+              className={`px-10 py-3 rounded-xl font-bold text-white shadow-md transition ${mappingLoading ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"}`}>
               {mappingLoading ? "جاري التطبيق..." : "تطبيق الربط"}
             </button>
           </div>
@@ -206,13 +206,13 @@ function MappingContent() {
       {/* معاينة قبل التصنيف */}
       {previewData && !classifiedData && (
         <div className="space-y-4">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mt-8">
-            <div className="p-5 bg-gray-50 border-b border-gray-100">
-              <h3 className="font-bold text-gray-800">البيانات بعد الربط (قبل التنظيف)</h3>
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mt-8">
+            <div className="p-5 bg-gray-50 border-b border-slate-100">
+              <h3 className="font-bold text-slate-800">البيانات بعد الربط (قبل التنظيف)</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-right text-sm">
-                <thead className="bg-white text-gray-500 border-b border-gray-100">
+                <thead className="bg-white text-slate-500 border-b border-slate-100">
                   <tr>
                     <th className="p-4 font-semibold">رقم الاستمارة</th>
                     <th className="p-4 font-semibold">رب الأسرة</th>
@@ -222,16 +222,17 @@ function MappingContent() {
                 <tbody className="divide-y divide-gray-50">
                   {previewData.slice(0, 5).map((row, idx) => (
                     <tr key={idx} className="hover:bg-blue-50/50 transition">
-                      <td className="p-4 text-gray-800 font-medium">{row.form_number || "-"}</td>
-                      <td className="p-4 text-gray-700">{row.head_name || "-"}</td>
+                      <td className="p-4 text-slate-800 font-medium">{row.form_number || "-"}</td>
+                      <td className="p-4 text-slate-700">{row.head_name || "-"}</td>
                       <td className="p-4 text-blue-600 font-medium">{row.raw_address || "-"}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <div className="p-4 text-center text-sm text-gray-500 bg-gray-50 border-t border-gray-100">
-              يتم عرض أول 5 صفوف. إجمالي العينة: {previewData.length}
+            <div className="p-4 text-center text-sm text-slate-500 bg-slate-50 border-t border-slate-100">
+              هذه معاينة للصفوف الأولى فقط وليست كل السجلات.
+              عدد الصفوف في هذه العينة: {previewData.length}
             </div>
           </div>
           <div className="flex justify-center mt-6">
@@ -246,9 +247,9 @@ function MappingContent() {
       {/* نتائج التصنيف */}
       {classifiedData && summary && (
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-bold text-gray-800 mb-1">نتائج التصنيف والتنظيف</h2>
-            <p className="text-gray-500 text-sm">تم تنظيف وتصنيف {classifiedData.length} سجل بناءً على قاموس المناطق والقواعد.</p>
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <h2 className="text-2xl font-bold text-slate-800 mb-1">نتائج التصنيف والتنظيف</h2>
+            <p className="text-slate-500 text-sm">تم تنظيف وتصنيف {classifiedData.length} سجل بناءً على قاموس المناطق والقواعد.</p>
           </div>
 
           {/* كروت الملخص */}
@@ -261,9 +262,9 @@ function MappingContent() {
               <div className="text-sm text-green-600 font-semibold mb-1">مناطق صحيحة</div>
               <div className="text-3xl font-bold text-green-700">{summary.area}</div>
             </div>
-            <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm text-center">
-              <div className="text-sm text-gray-500 font-semibold mb-1">غير مذكور</div>
-              <div className="text-3xl font-bold text-gray-700">{summary.empty}</div>
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm text-center">
+              <div className="text-sm text-slate-500 font-semibold mb-1">غير مذكور</div>
+              <div className="text-3xl font-bold text-slate-700">{summary.empty}</div>
             </div>
             <div className="bg-white p-5 rounded-xl border border-red-100 shadow-sm text-center">
               <div className="text-sm text-red-500 font-semibold mb-1">ليست مناطق</div>
@@ -288,13 +289,13 @@ function MappingContent() {
             <div className="space-y-6">
               {/* توزيع المناطق */}
               {statsData.area_distribution.length > 0 && (
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                  <div className="p-5 bg-gray-50 border-b border-gray-100">
-                    <h3 className="font-bold text-gray-800">توزيع السجلات حسب المنطقة</h3>
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                  <div className="p-5 bg-gray-50 border-b border-slate-100">
+                    <h3 className="font-bold text-slate-800">توزيع السجلات حسب المنطقة</h3>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-right text-sm">
-                      <thead className="bg-white text-gray-500 border-b border-gray-100">
+                      <thead className="bg-white text-slate-500 border-b border-slate-100">
                         <tr>
                           <th className="p-4 font-semibold">#</th>
                           <th className="p-4 font-semibold">المنطقة الموحدة</th>
@@ -306,7 +307,7 @@ function MappingContent() {
                           <tr key={idx} className="hover:bg-gray-50 transition">
                             <td className="p-4 text-gray-400 text-xs">{idx + 1}</td>
                             <td className="p-4 font-semibold text-blue-700">{row.area_name}</td>
-                            <td className="p-4 text-gray-700">{row.count}</td>
+                            <td className="p-4 text-slate-700">{row.count}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -325,7 +326,7 @@ function MappingContent() {
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-right text-sm">
-                      <thead className="bg-white text-gray-500 border-b border-gray-100">
+                      <thead className="bg-white text-slate-500 border-b border-slate-100">
                         <tr>
                           <th className="p-4 font-semibold">رقم الاستمارة</th>
                           <th className="p-4 font-semibold">رب الأسرة</th>
@@ -337,15 +338,15 @@ function MappingContent() {
                       <tbody className="divide-y divide-gray-100">
                         {statsData.review_records.map((row: any, idx: number) => (
                           <tr key={idx} className="hover:bg-yellow-50/50 transition">
-                            <td className="p-4 text-gray-800">{row.form_number || "-"}</td>
-                            <td className="p-4 text-gray-800">{row.head_name || "-"}</td>
-                            <td className="p-4 text-gray-500">{row.raw_address || "-"}</td>
+                            <td className="p-4 text-slate-800">{row.form_number || "-"}</td>
+                            <td className="p-4 text-slate-800">{row.head_name || "-"}</td>
+                            <td className="p-4 text-slate-500">{row.raw_address || "-"}</td>
                             <td className="p-4">
                               <span className="px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
                                 {row.address_classification}
                               </span>
                             </td>
-                            <td className="p-4 text-xs text-gray-500">{row.classification_reason || "-"}</td>
+                            <td className="p-4 text-xs text-slate-500">{row.classification_reason || "-"}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -367,13 +368,13 @@ function MappingContent() {
           )}
 
           {/* فلاتر الجدول */}
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-            <h3 className="font-bold text-gray-700 mb-4 text-sm">فلترة السجلات</h3>
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+            <h3 className="font-bold text-slate-700 mb-4 text-sm">فلترة السجلات</h3>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               <div>
-                <label className="block text-xs text-gray-500 mb-1">التصنيف</label>
+                <label className="block text-xs text-slate-500 mb-1">التصنيف</label>
                 <select value={filterCls} onChange={e => setFilterCls(e.target.value)}
-                  className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                  className="w-full p-2 border border-slate-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
                   <option value="all">الكل</option>
                   <option value="area">منطقة</option>
                   <option value="empty">فارغ</option>
@@ -382,9 +383,9 @@ function MappingContent() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-gray-500 mb-1">حالة السجل</label>
+                <label className="block text-xs text-slate-500 mb-1">حالة السجل</label>
                 <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)}
-                  className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                  className="w-full p-2 border border-slate-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
                   <option value="all">الكل</option>
                   <option value="complete">مكتمل</option>
                   <option value="incomplete">غير مكتمل</option>
@@ -392,27 +393,27 @@ function MappingContent() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-gray-500 mb-1">المنطقة الموحدة</label>
+                <label className="block text-xs text-slate-500 mb-1">المنطقة الموحدة</label>
                 <input type="text" value={filterArea} onChange={e => setFilterArea(e.target.value)}
                   placeholder="ابحث بالمنطقة..."
-                  className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+                  className="w-full p-2 border border-slate-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400" />
               </div>
               <div>
-                <label className="block text-xs text-gray-500 mb-1">رب الأسرة</label>
+                <label className="block text-xs text-slate-500 mb-1">رب الأسرة</label>
                 <input type="text" value={searchHead} onChange={e => setSearchHead(e.target.value)}
                   placeholder="ابحث بالاسم..."
-                  className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+                  className="w-full p-2 border border-slate-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400" />
               </div>
               <div>
-                <label className="block text-xs text-gray-500 mb-1">رقم الاستمارة</label>
+                <label className="block text-xs text-slate-500 mb-1">رقم الاستمارة</label>
                 <input type="text" value={searchForm} onChange={e => setSearchForm(e.target.value)}
                   placeholder="ابحث برقم..."
-                  className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+                  className="w-full p-2 border border-slate-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400" />
               </div>
             </div>
             {(filterCls !== "all" || filterStatus !== "all" || filterArea || searchHead || searchForm) && (
               <div className="mt-3 flex items-center gap-3">
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-slate-500">
                   يُعرض {filteredData.length} من {classifiedData.length} سجل
                 </span>
                 <button onClick={() => { setFilterCls("all"); setFilterStatus("all"); setFilterArea(""); setSearchHead(""); setSearchForm(""); }}
@@ -422,10 +423,10 @@ function MappingContent() {
           </div>
 
           {/* جدول السجلات الكامل */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-right text-sm">
-                <thead className="bg-gray-50 text-gray-600 border-b border-gray-200">
+                <thead className="bg-gray-50 text-gray-600 border-b border-slate-200">
                   <tr>
                     <th className="p-4 font-semibold">رقم الاستمارة</th>
                     <th className="p-4 font-semibold">رب الأسرة</th>
@@ -446,14 +447,14 @@ function MappingContent() {
                   ) : (
                     filteredData.map((row: any, idx: number) => (
                       <tr key={idx} className="hover:bg-gray-50 transition">
-                        <td className="p-4 text-gray-800">{row.form_number || "-"}</td>
-                        <td className="p-4 text-gray-800">{row.head_name || "-"}</td>
-                        <td className="p-4 text-gray-500 font-medium">{row.original_address_variant || row.raw_address || "-"}</td>
+                        <td className="p-4 text-slate-800">{row.form_number || "-"}</td>
+                        <td className="p-4 text-slate-800">{row.head_name || "-"}</td>
+                        <td className="p-4 text-slate-500 font-medium">{row.original_address_variant || row.raw_address || "-"}</td>
                         <td className="p-4 font-bold text-blue-700">{row.normalized_area || "-"}</td>
                         <td className="p-4">
                           <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                             row.address_classification === "area" ? "bg-green-100 text-green-800" :
-                            row.address_classification === "empty" ? "bg-gray-100 text-gray-800" :
+                            row.address_classification === "empty" ? "bg-gray-100 text-slate-800" :
                             row.address_classification === "non_area" ? "bg-red-100 text-red-800" :
                             "bg-yellow-100 text-yellow-800"
                           }`}>
@@ -463,13 +464,13 @@ function MappingContent() {
                         <td className="p-4">
                           <span className={`px-2 py-1 rounded text-xs ${
                             row.record_status === "complete" ? "text-green-600" :
-                            row.record_status === "incomplete" ? "text-gray-500" :
+                            row.record_status === "incomplete" ? "text-slate-500" :
                             "text-yellow-600"
                           }`}>
                             {row.record_status}
                           </span>
                         </td>
-                        <td className="p-4 text-xs text-gray-500 max-w-xs">{row.classification_reason || "-"}</td>
+                        <td className="p-4 text-xs text-slate-500 max-w-xs">{row.classification_reason || "-"}</td>
                       </tr>
                     ))
                   )}

@@ -33,11 +33,11 @@ export default function ReportsPage() {
   if (!stats) {
     return (
       <div className="space-y-6">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h2 className="text-3xl font-bold text-gray-800 mb-1">التقارير الإدارية</h2>
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+          <h2 className="text-3xl font-bold text-slate-800 mb-1">التقارير الإدارية</h2>
           <p className="text-gray-400 text-sm">تقرير مبني على آخر بيانات مصنفة</p>
         </div>
-        <div className="bg-white p-16 rounded-2xl shadow-sm border border-gray-100 text-center">
+        <div className="bg-white p-16 rounded-2xl shadow-sm border border-slate-100 text-center">
           <div className="text-7xl mb-5 select-none">📋</div>
           <p className="text-gray-600 text-lg font-semibold mb-2">
             لا توجد بيانات تقرير بعد.
@@ -91,15 +91,15 @@ export default function ReportsPage() {
     <div className="space-y-6 max-w-4xl mx-auto">
 
       {/* Page Header */}
-      <div className="print:hidden bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center flex-wrap gap-3">
+      <div className="print:hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center flex-wrap gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-1">التقارير الإدارية</h2>
+          <h2 className="text-2xl font-bold text-slate-800 mb-1">التقارير الإدارية</h2>
           <p className="text-gray-400 text-sm">تقرير مبني على آخر بيانات مصنفة</p>
         </div>
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={loadStats}
-            className="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition text-gray-600"
+            className="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-slate-50 transition text-gray-600"
           >
             تحديث التقرير
           </button>
@@ -131,7 +131,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Report Document */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
 
         {/* Report Title Banner */}
         <div className="bg-gradient-to-l from-blue-800 to-blue-600 text-white p-8 text-center">
@@ -152,7 +152,7 @@ export default function ReportsPage() {
               {[
                 { label: "إجمالي السجلات", value: stats.total_records, cls: "border-blue-100 bg-blue-50 text-blue-700" },
                 { label: "مناطق صحيحة",   value: cs.area,             cls: "border-green-100 bg-green-50 text-green-700" },
-                { label: "قيم فارغة",      value: cs.empty,            cls: "border-gray-200 bg-gray-50 text-gray-600" },
+                { label: "قيم فارغة",      value: cs.empty,            cls: "border-gray-200 bg-slate-50 text-gray-600" },
                 { label: "ليست مناطق",    value: cs.non_area,         cls: "border-red-100 bg-red-50 text-red-600" },
                 { label: "تحتاج مراجعة", value: cs.needs_review,     cls: "border-yellow-100 bg-yellow-50 text-yellow-700" },
               ].map((c, i) => (
@@ -171,7 +171,7 @@ export default function ReportsPage() {
               headers={["التصنيف", "عدد السجلات", "النسبة"]}
               rows={[
                 [<Badge label="مناطق صحيحة — area"       cls="bg-green-100 text-green-800" />, cs.area,         `${pct(cs.area)}%`],
-                [<Badge label="قيم فارغة — empty"         cls="bg-gray-100 text-gray-700" />,  cs.empty,        `${pct(cs.empty)}%`],
+                [<Badge label="قيم فارغة — empty"         cls="bg-gray-100 text-slate-700" />,  cs.empty,        `${pct(cs.empty)}%`],
                 [<Badge label="ليست مناطق — non_area"    cls="bg-red-100 text-red-700" />,    cs.non_area,     `${pct(cs.non_area)}%`],
                 [<Badge label="تحتاج مراجعة — needs_review" cls="bg-yellow-100 text-yellow-700" />, cs.needs_review, `${pct(cs.needs_review)}%`],
               ]}
@@ -185,7 +185,7 @@ export default function ReportsPage() {
               headers={["الحالة", "عدد السجلات", "النسبة"]}
               rows={[
                 [<Badge label="مكتمل — complete"           cls="bg-blue-100 text-blue-800" />,   ss.complete,     `${pct(ss.complete)}%`],
-                [<Badge label="غير مكتمل — incomplete"     cls="bg-gray-100 text-gray-700" />,   ss.incomplete,   `${pct(ss.incomplete)}%`],
+                [<Badge label="غير مكتمل — incomplete"     cls="bg-gray-100 text-slate-700" />,   ss.incomplete,   `${pct(ss.incomplete)}%`],
                 [<Badge label="يحتاج مراجعة — needs_review" cls="bg-orange-100 text-orange-700" />, ss.needs_review, `${pct(ss.needs_review)}%`],
               ]}
             />
@@ -234,7 +234,7 @@ export default function ReportsPage() {
               <SectionTitle num="6" title="ملاحظات إدارية" />
               <ul className="space-y-2.5">
                 {adminNotes.map((note, i) => (
-                  <li key={i} className="flex items-start gap-2.5 text-sm text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <li key={i} className="flex items-start gap-2.5 text-sm text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-100">
                     <span className="text-blue-500 mt-0.5 shrink-0 text-base">●</span>
                     <span>{note}</span>
                   </li>
@@ -244,7 +244,7 @@ export default function ReportsPage() {
           )}
 
           {/* Footer */}
-          <div className="pt-4 border-t border-gray-100 text-center">
+          <div className="pt-4 border-t border-slate-100 text-center">
             <p className="text-xs text-gray-400">
               سيتم دعم تصدير هذا التقرير (PDF / Excel) في مرحلة لاحقة.
             </p>
@@ -276,7 +276,7 @@ export default function ReportsPage() {
 
 function SectionTitle({ num, title, badge }: { num: string; title: string; badge?: string }) {
   return (
-    <h2 className="text-base font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+    <h2 className="text-base font-bold text-slate-800 mb-4 pb-2 border-b border-slate-100 flex items-center gap-2">
       <span className="w-6 h-6 bg-blue-600 text-white rounded-full text-xs flex items-center justify-center shrink-0">
         {num}
       </span>
@@ -299,14 +299,14 @@ function Badge({ label, cls }: { label: string; cls: string }) {
 function ReportTable({
   headers,
   rows,
-  headerCls = "bg-gray-50",
+  headerCls = "bg-slate-50",
 }: {
   headers: string[];
   rows: (string | number | React.ReactNode)[][];
   headerCls?: string;
 }) {
   return (
-    <div className="rounded-xl border border-gray-100 overflow-hidden">
+    <div className="rounded-xl border border-slate-100 overflow-hidden">
       <table className="w-full text-sm text-right">
         <thead>
           <tr className={`${headerCls} text-gray-600`}>
@@ -317,9 +317,9 @@ function ReportTable({
         </thead>
         <tbody className="divide-y divide-gray-100">
           {rows.map((row, i) => (
-            <tr key={i} className="hover:bg-gray-50/50 transition">
+            <tr key={i} className="hover:bg-slate-50/50 transition">
               {row.map((cell, j) => (
-                <td key={j} className="p-3 text-gray-700">{cell}</td>
+                <td key={j} className="p-3 text-slate-700">{cell}</td>
               ))}
             </tr>
           ))}
