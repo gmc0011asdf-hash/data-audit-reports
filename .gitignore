@@ -60,3 +60,8 @@ frontend/yarn-error.log*
 # System Files
 .DS_Store
 Thumbs.db
+
+# Python virtual environments
+.venv/
+backend/.venv/
+**/.venv/
